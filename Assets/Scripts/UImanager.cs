@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-
+using UnityEngine.SceneManagement;
 public class UImanager : MonoBehaviour
 {
     [SerializeField] private InputField playerNameInput;
@@ -11,6 +11,8 @@ public class UImanager : MonoBehaviour
     [SerializeField] private GameObject nameInputPanel;
     [SerializeField] private GameObject gameplayPanel;
     [SerializeField] private GameObject resultPanel;
+
+    [SerializeField] private GameObject rankPanel;
     [SerializeField] private Text resultScoreText;
 
     private void Start()
@@ -21,7 +23,8 @@ public class UImanager : MonoBehaviour
 
     private void InitializeUI()
     {
-        setNameButton.onClick.AddListener(SetPlayerNameAndStartGame);
+        playerNameInput.text = "player";
+        // setNameButton.onClick.AddListener(SetPlayerNameAndStartGame);
     }
 
     private void SetInitialPanelStates()
@@ -31,7 +34,7 @@ public class UImanager : MonoBehaviour
         SetPanelActive(resultPanel, false);
     }
 
-    private void SetPlayerNameAndStartGame()
+    public void SetPlayerNameAndStartGame()
     {
         string newName = playerNameInput.text.Trim();
         if (string.IsNullOrEmpty(newName))
@@ -73,6 +76,28 @@ public class UImanager : MonoBehaviour
         currentNameText.text = string.IsNullOrEmpty(playerName) ? "No name set" : $"Current Name: {playerName}";
     }
 
+public void ReloadScene()
+    {
+        // 現在のシーンを取得してリロード
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
+    }
+
+//     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+// {
+//     // PlayFabに再接続
+//     PlayfabManager.Instance.ReconnectToPlayFab();
+// }
+
+// private void OnEnable()
+// {
+//     SceneManager.sceneLoaded += OnSceneLoaded;
+// }
+
+// private void OnDisable()
+// {
+//     SceneManager.sceneLoaded -= OnSceneLoaded;
+// }
     public void ShowResult(int score)
     {
         SetPanelActive(gameplayPanel, false);
@@ -88,6 +113,22 @@ public class UImanager : MonoBehaviour
     private void SetFeedbackText(string message)
     {
         feedbackText.text = message;
+    }
+      public void SkipUISetup()
+    {
+        // 必要なUIパネルの非表示化
+        SetPanelActive(nameInputPanel, false);
+        SetPanelActive(gameplayPanel, true);
+        // 他の必要なUI初期化処理
+    }
+    public void resultPanelRemove()
+    {
+        SetPanelActive(resultPanel, false);
+    }
+    public void resultPanelActive()
+    {
+        SetPanelActive(resultPanel, true);
+        SetPanelActive(rankPanel, false);
     }
 }
 

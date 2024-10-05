@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class NoteSpawner : MonoBehaviour
 {
@@ -43,6 +44,11 @@ public class NoteSpawner : MonoBehaviour
         if (ballController != null)
         {
             ballController.Initialize();
+            XRGrabInteractable grabInteractable = note.GetComponent<XRGrabInteractable>();
+            if (grabInteractable != null)
+            {
+                grabInteractable.selectEntered.AddListener(ballController.OnSelectEntered);
+            }
         }
     }
 }

@@ -1,8 +1,16 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class BallController : MonoBehaviour
 {
+private XRGrabInteractable grabInteractable;
+    private void Awake()
+    {
+        grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
+        grabInteractable.movementType = XRBaseInteractable.MovementType.Kinematic;
+        grabInteractable.throwOnDetach = false;
+    }
     public void Initialize()
     {
         transform.DOLocalPath(
@@ -17,12 +25,9 @@ public class BallController : MonoBehaviour
             .OnComplete(() => DestroyBall());
     }
 
-    private void OnMouseDown()
+    public void OnSelectEntered(SelectEnterEventArgs args)
     {
-        if (GameDirector.Instance != null && GameDirector.Instance.IsGameActive)
-        {
-            DestroyBall();
-        }
+        DestroyBall();
     }
 
     private void DestroyBall()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 
+
 public class PlayfabManager : MonoBehaviour
 {
     public static PlayfabManager Instance { get; private set; }
@@ -24,7 +25,7 @@ public class PlayfabManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if(Instance != this)
         {
             Destroy(gameObject);
         }
@@ -117,6 +118,12 @@ public class PlayfabManager : MonoBehaviour
 
     public void RequestLeaderboard() {
         Debug.Log("Requesting leaderboard...");
+    //       if (string.IsNullOrEmpty(playerId))
+    // {
+    //     Debug.LogError("Player ID is null or empty. Reconnecting to PlayFab...");
+    //     ReconnectToPlayFab();
+    //     return;
+    // }
     PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest {
             StatisticName = "AllTimeHighScore",
             StartPosition = 0,
@@ -125,15 +132,78 @@ public class PlayfabManager : MonoBehaviour
 }
 private void DisplayLeaderboard(GetLeaderboardResult result){
     Debug.Log("Leaderboard received:");
-    foreach (var item in result.Leaderboard)
+
+    foreach (Transform child in leaderboardContent)
     {
-        Debug.Log($"{item.Position+1}位:{item.DisplayName}"+$"スコア {item.StatValue}");
+        Destroy(child.gameObject);
     }
+        foreach (var item in result.Leaderboard)
+        {
+            GameObject entryObject = Instantiate(leaderboardEntryPrefab, leaderboardContent);
+            Text[] texts = entryObject.GetComponentsInChildren<Text>();
+
+            if (texts.Length >= 3)
+            {
+                texts[0].text = (item.Position + 1).ToString();  // 順位
+                texts[1].text = item.DisplayName;                // プレイヤー名
+                texts[2].text = item.StatValue.ToString();       // スコア
+            }
+            else
+            {
+                Debug.LogWarning("Leaderboard entry prefab does not have enough Text components");
+            }
+        }
+        leaderboardPanel.SetActive(true);
+    // foreach (var item in result.Leaderboard)
+    // {
+    //     Debug.Log($"{item.Position+1}位:{item.DisplayName}"+$"スコア {item.StatValue}");
+    // }
 }
 private void FailureCallback(PlayFabError error){
     Debug.LogWarning("Something went wrong with your API call. Here's some debug information:");
     Debug.LogError(error.GenerateErrorReport());
 }
+
+  public void SetDebugPlayerName(string debugName)
+    {
+        // デバッグ用の仮のプレイヤー名設定
+        // 注意: この方法はテスト用であり、実際のPlayFab接続は行われません
+        Debug.Log($"Debug: Setting player name to {debugName}");
+        // 必要に応じて、ローカルでプレイヤー名を保存する処理を追加
+    }
+//     public void ReconnectToPlayFab()
+// {
+//     if (string.IsNullOrEmpty(playerId))
+//     {
+//         // プレイヤーIDがない場合は新規ログイン
+//         LoginWithCustomIdAndSetName("Player", (success) => {
+//             if (success)
+//             {
+//                 Debug.Log("Reconnected to PlayFab");
+//             }
+//             else
+//             {
+//                 Debug.LogError("Failed to reconnect to PlayFab");
+//             }
+//         });
+//     }
+//     else
+//     {
+//         // プレイヤーIDがある場合は既存のIDでログイン
+//         var request = new LoginWithCustomIDRequest
+//         {
+//             CustomId = playerId,
+//             CreateAccount = false
+//         };
+//         PlayFabClientAPI.LoginWithCustomID(request,
+//             result => {
+//                 Debug.Log("Reconnected to PlayFab");
+//             },
+//             error => {
+//                 Debug.LogError($"Failed to reconnect to PlayFab: {error.ErrorMessage}");
+//             });
+//     }
+// }
 }
 
 
