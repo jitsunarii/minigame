@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Classroom01.unity
     guid: 486840f6ec940324784dc26b5d42a751
+  - enabled: 1
+    path: Assets/Samples/XR Interaction Toolkit/2.5.4/Starter Assets/DemoScene.unity
+    guid: 319dafa5c80f29f428dc1e0d03f04177
+  - enabled: 1
+    path: Assets/Scenes/Teleport.unity
+    guid: d1ce78cd6e8a6432abfb02ef0199ecd8
+  - enabled: 1
+    path: Assets/Scenes/HandTracking.unity
+    guid: 7b21776278c4541f289850813d0e5327
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 21d398407305a4907b0188bbbeed6dd6, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9beb70f0ed4464725afceec05e052111, type: 2}
